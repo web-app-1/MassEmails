@@ -16,7 +16,7 @@
                 use_tls: "{{ use_tls }}",
                 subject: "{{ subject }}",
                 message: "{{ message }}",
-                attachment_path: "{{ attachment_path }}"
+                attachment_path: "{{ attachment_path|escapejs }}"  // Escapar adecuadamente la ruta
             };
 
             const resultsContainer = document.getElementById('results');
@@ -37,7 +37,7 @@
                 formData.append('contact', `${contact.email}, ${contact.name}`);
                 formData.append('attachment_path', emailData.attachment_path);
 
-
+                console.log("Sending data to /process_emails/:", Object.fromEntries(formData.entries()));
 
                 fetch('/process_emails/', {
                     method: 'POST',
@@ -78,13 +78,12 @@
 <body>
     <div class="container mt-5">
         <h2>Email Sending Log</h2>
-        <input type="hidden" name="attachment_path" value="{{ attachment_path }}">
+        <input type="hidden" name="attachment_path" value="{{ attachment_path|escapejs }}">
 
         <ul class="list-group" id="results"></ul>
         <!-- Mensaje de proceso completado -->
         <div id="completedMessage" class="alert alert-success mt-3" style="display: none;">
             <h4>Process Completed!</h4>
-            
             <a href="{% url 'send_email' %}" class="btn btn-primary">Send More Emails</a>
         </div>
     </div>

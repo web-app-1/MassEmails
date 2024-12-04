@@ -35,24 +35,26 @@ def send_mass_email(request):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             contact_file = form.cleaned_data['contact_file']
+            include_attachment = form.cleaned_data['include_attachment']  # Checkbox para adjunto
 
             # Configuración del archivo adjunto
-            attachment_dir = "C:\\temp"
-            attachment_name = "attachment"
-            possible_extensions = [".pdf", ".docx", ".jpg"]
-
             attachment_path = None
-            for ext in possible_extensions:
-                temp_path = os.path.join(attachment_dir, attachment_name + ext)
-                if os.path.exists(temp_path):
-                    attachment_path = temp_path
-                    break
+            if include_attachment:
+                attachment_dir = "C:\\temp"
+                attachment_name = "attachment"
+                possible_extensions = [".pdf", ".docx", ".jpg"]
 
-            if attachment_path:
-                print(f"Attachment found: {attachment_path}")
-            else:
-                print(f"Attachment not found in {attachment_dir}")
-                attachment_path = None  # No es obligatorio, pero asegura que sea manejado como `None` en progreso
+                for ext in possible_extensions:
+                    temp_path = os.path.join(attachment_dir, attachment_name + ext)
+                    if os.path.exists(temp_path):
+                        attachment_path = temp_path
+                        break
+
+                if attachment_path:
+                    print(f"Attachment found: {attachment_path}")
+                else:
+                    print(f"No attachment found in {attachment_dir}")
+                    attachment_path = None  # Si no se encuentra, asegúrate de que sea None
 
             # Leer archivo de contactos
             contacts = []
@@ -82,31 +84,10 @@ def send_mass_email(request):
     return render(request, 'mass_emails/send_email.html', {'form': form})
 
 
-
-
 @login_required
 def process_emails(request):
     if request.method == 'POST':
         try:
-            # Configuración del archivo adjunto
-            attachment_dir = "C:\\temp"
-            attachment_name = "attachment"
-            possible_extensions = [".pdf", ".docx", ".jpg"]
-
-            attachment_path = None
-            for ext in possible_extensions:
-                temp_path = os.path.join(attachment_dir, attachment_name + ext)
-                if os.path.exists(temp_path):
-                    attachment_path = temp_path
-                    break
-
-            if attachment_path:
-                print(f"Attachment found: {attachment_path}")
-            else:
-                print(f"Attachment not found in {attachment_dir}")
-                return JsonResponse({"status": "error", "message": f"Attachment not found in {attachment_dir}"})
-
-            # Obtener datos del formulario
             contact = request.POST.get('contact')
             email_host = request.POST.get('email_host')
             email_port = int(request.POST.get('email_port'))
@@ -115,11 +96,15 @@ def process_emails(request):
             use_tls = request.POST.get('use_tls') == 'True'
             subject = request.POST.get('subject')
             message = request.POST.get('message')
+            attachment_path = request.POST.get('attachment_path')  # Recibir la ruta del adjunto
             image_url = "https://i.imgur.com/IVtwyfD.jpeg"
 
+            # Validar ruta de archivo
+            if attachment_path:
+                attachment_path = os.path.normpath(attachment_path)  # Normalizar la ruta en Windows
+
             print(f"Processing email for contact: {contact}")
-            print(f"Email Host: {email_host}, Port: {email_port}")
-            print(f"Use TLS: {use_tls}")
+            print(f"Attachment Path: {attachment_path}")
 
             if not contact:
                 return JsonResponse({"status": "error", "message": "No contact provided"})
@@ -142,11 +127,12 @@ def process_emails(request):
             """
             msg.attach(MIMEText(html_content, 'html'))
 
-            # Adjuntar archivo
-            with open(attachment_path, 'rb') as f:
-                part = MIMEApplication(f.read(), Name=os.path.basename(attachment_path))
-                part['Content-Disposition'] = f'attachment; filename="{os.path.basename(attachment_path)}"'
-                msg.attach(part)
+            # Adjuntar archivo si existe
+            if attachment_path and os.path.exists(attachment_path):
+                with open(attachment_path, 'rb') as f:
+                    part = MIMEApplication(f.read(), Name=os.path.basename(attachment_path))
+                    part['Content-Disposition'] = f'attachment; filename="{os.path.basename(attachment_path)}"'
+                    msg.attach(part)
 
             # Configurar conexión SMTP
             server = smtplib.SMTP(email_host, email_port)
