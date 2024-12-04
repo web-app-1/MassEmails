@@ -1,0 +1,9 @@
+{% extends "mass_emails/base.html" %}
+
+{% block title %}Correo Enviado{% endblock %}
+
+{% block content %}
+    <h2>¡Correos Enviados!</h2>
+    <p>Todos los correos han sido enviados exitosamente.</p>
+    <a href="{% url 'send_email' %}">Enviar más correos</a>
+{% endblock %}

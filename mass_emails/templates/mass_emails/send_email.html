@@ -1,0 +1,117 @@
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Blaster</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Navbar */
+        .custom-navbar {
+            background-color: #0078D4;
+            padding: 10px 15px;
+        }
+        .custom-navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .custom-navbar a:hover {
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="custom-navbar">
+        <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand">Email Blaster</a>
+            <div>
+                <a href="{% url 'home' %}" class="me-3">Home</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <form method="post" enctype="multipart/form-data"> <!-- Un único formulario -->
+            {% csrf_token %}
+            <div class="row row-cols-1 row-cols-md-2 g-4"> <!-- Grilla con columnas y espacio -->
+                <!-- Configuración del Correo -->
+                <div class="col">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Email Config</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                {{ form.email_host.label_tag }}
+                                {{ form.email_host|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.email_port.label_tag }}
+                                {{ form.email_port|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.email_address.label_tag }}
+                                {{ form.email_address|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.email_password.label_tag }}
+                                {{ form.email_password|add_class:"form-control" }}
+                            </div>
+                            <div class="form-check mb-2">
+                                {{ form.use_tls }}
+                                {{ form.use_tls.label_tag }}
+                            </div>
+                            <div class="form-check mb-2">
+                                {{ form.use_ssl }}
+                                {{ form.use_ssl.label_tag }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalles del Mensaje -->
+                <div class="col">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Message Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                {{ form.subject.label_tag }}
+                                {{ form.subject|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.message.label_tag }}
+                                {{ form.message|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.image.label_tag }}
+                                {{ form.image|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.contact_file.label_tag }}
+                                {{ form.contact_file|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Botón Submit -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success w-25">Blast!</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

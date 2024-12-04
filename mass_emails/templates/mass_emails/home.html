@@ -1,0 +1,12 @@
+{% extends "mass_emails/base.html" %}
+
+{% block title %}Inicio - EmailApp{% endblock %}
+
+{% block content %}
+    <div class="text-center mt-5">
+        <h2>Welcome Mail Blaster!</h2>
+        <p>From here, you can effortlessly send bulk emails. Manage your email campaigns with ease and efficiency.</p>
+        <a href="{% url 'send_email' %}" class="btn btn-primary mt-3">Start</a> <!-- Botón de inicio -->
+    </div>
+{% endblock %}
+

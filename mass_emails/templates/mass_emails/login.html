@@ -1,0 +1,26 @@
+{% extends "mass_emails/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="text-center mb-4 text-primary">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                {{ form.password|add_class:"form-control" }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        {% if form.errors %}
+            <div class="alert alert-danger mt-3" role="alert">
+                Invalid username or password
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

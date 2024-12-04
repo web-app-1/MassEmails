@@ -1,0 +1,176 @@
+/* General */
+/* Configuración global para el diseño general de las páginas */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido esté alineado con el header */
+    height: auto; /* Deja que el contenido principal determine la altura */
+    overflow-y: auto; /* Permite el scroll en las demás páginas */
+}
+
+/* Configuración específica para la página de login */
+body.login-page {
+    overflow: hidden; /* Elimina el scroll */
+    height: 100vh; /* Fuerza la altura completa de la ventana */
+    margin: 0;
+}
+
+body.login-page main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    height: 100%; /* Ocupa toda la altura disponible */
+}
+
+/* Ajuste del contenedor del login */
+body.login-page .d-flex {
+    height: 100%; /* Asegura que el contenedor ocupe toda la altura disponible */
+}
+
+
+main {
+    flex-grow: 1; /* Expande el contenido principal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-top: 50px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #0078D4; /* Azul estilo Outlook */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar .nav-links li {
+    display: inline;
+}
+
+.navbar .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: #f0f0f0; /* Cambia a gris claro al pasar el ratón */
+}
+
+/* Main content */
+.content {
+    padding: 20px;
+    text-align: center;
+    background-color: #ffffff; /* Fondo blanco para el contenido */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+/* Tarjeta de login */
+.card {
+    max-width: 500px; /* Ancho máximo */
+    min-width: 300px; /* Ancho mínimo */
+    width: 100%; /* Ajuste dinámico */
+}
+
+/* Contenedor Flex para las tarjetas */
+.email-flex-container {
+    display: flex;
+    flex-wrap: nowrap; /* Permite apilar las tarjetas en pantallas pequeñas */
+    gap: 20px; /* Espaciado entre las tarjetas */
+    justify-content: center; /* Centra horizontalmente las tarjetas */
+    align-items: stretch; /* Asegura que las tarjetas tengan la misma altura */
+}
+ 
+/* Tarjetas de Email */
+.email-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Deja que Bootstrap controle el ancho */
+}
+
+
+/* Encabezados de las tarjetas */
+.email-card-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Cuerpo de las tarjetas */
+.email-card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaciado interno uniforme */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap; /* Asegura que las tarjetas se apilen en pantallas pequeñas */
+    gap: 20px; /* Espaciado entre las tarjetas */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+}
+
+/* Tarjetas */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.col-md-6 {
+    flex: 1 1 calc(50% - 20px); /* Ocupan 50% del ancho en pantallas grandes */
+    max-width: 600px; /* Limita el ancho máximo */
+}
+
+.email-card {
+    flex: 1; /* Permite que las tarjetas tomen el espacio disponible */
+    height: 100%; /* Asegura alturas uniformes */
+}
+
+@media (max-width: 992px) {
+    .email-card {
+        margin-bottom: 20px; /* Espaciado vertical entre tarjetas en pantallas pequeñas */
+    }
+}
+
+/* Footer */
+footer {
+    background-color: #0078D4; /* Azul estilo Outlook */
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+
