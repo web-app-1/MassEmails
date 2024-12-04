@@ -92,14 +92,16 @@
                                 {{ form.message.label_tag }}
                                 {{ form.message|add_class:"form-control" }}
                             </div>
-                            <div class="mb-3">
-                                {{ form.image.label_tag }}
-                                {{ form.image|add_class:"form-control" }}
-                            </div>
+                            
                             <div class="mb-3">
                                 {{ form.contact_file.label_tag }}
                                 {{ form.contact_file|add_class:"form-control" }}
                             </div>
+                            <div class="form-check mb-2">
+                                {{ form.include_attachment }}
+                                {{ form.include_attachment.label_tag }}
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

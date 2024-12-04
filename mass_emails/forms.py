@@ -14,3 +14,4 @@ class EmailForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea, label="Message")
     image = forms.ImageField(label="Image (optional)", required=False)
     contact_file = forms.FileField(label="Contacts File (txt)")
+    include_attachment = forms.BooleanField(label="Include Attachment", required=False)

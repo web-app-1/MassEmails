@@ -10,6 +10,9 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+import os
+from email.mime.application import MIMEApplication
+
 
 @login_required
 def home(request):
@@ -33,6 +36,24 @@ def send_mass_email(request):
             message = form.cleaned_data['message']
             contact_file = form.cleaned_data['contact_file']
 
+            # Configuración del archivo adjunto
+            attachment_dir = "C:\\temp"
+            attachment_name = "attachment"
+            possible_extensions = [".pdf", ".docx", ".jpg"]
+
+            attachment_path = None
+            for ext in possible_extensions:
+                temp_path = os.path.join(attachment_dir, attachment_name + ext)
+                if os.path.exists(temp_path):
+                    attachment_path = temp_path
+                    break
+
+            if attachment_path:
+                print(f"Attachment found: {attachment_path}")
+            else:
+                print(f"Attachment not found in {attachment_dir}")
+                attachment_path = None  # No es obligatorio, pero asegura que sea manejado como `None` en progreso
+
             # Leer archivo de contactos
             contacts = []
             for line in contact_file:
@@ -41,8 +62,8 @@ def send_mass_email(request):
 
             # Renderizar página de progreso con datos
             return render(
-                request, 
-                'mass_emails/progress.html', 
+                request,
+                'mass_emails/progress.html',
                 {
                     "contacts": contacts,
                     "email_host": email_host,
@@ -52,6 +73,7 @@ def send_mass_email(request):
                     "use_tls": use_tls,
                     "subject": subject,
                     "message": message,
+                    "attachment_path": attachment_path,  # Pasar la ruta del archivo adjunto
                 }
             )
     else:
@@ -59,10 +81,32 @@ def send_mass_email(request):
 
     return render(request, 'mass_emails/send_email.html', {'form': form})
 
+
+
+
 @login_required
 def process_emails(request):
     if request.method == 'POST':
         try:
+            # Configuración del archivo adjunto
+            attachment_dir = "C:\\temp"
+            attachment_name = "attachment"
+            possible_extensions = [".pdf", ".docx", ".jpg"]
+
+            attachment_path = None
+            for ext in possible_extensions:
+                temp_path = os.path.join(attachment_dir, attachment_name + ext)
+                if os.path.exists(temp_path):
+                    attachment_path = temp_path
+                    break
+
+            if attachment_path:
+                print(f"Attachment found: {attachment_path}")
+            else:
+                print(f"Attachment not found in {attachment_dir}")
+                return JsonResponse({"status": "error", "message": f"Attachment not found in {attachment_dir}"})
+
+            # Obtener datos del formulario
             contact = request.POST.get('contact')
             email_host = request.POST.get('email_host')
             email_port = int(request.POST.get('email_port'))
@@ -73,7 +117,6 @@ def process_emails(request):
             message = request.POST.get('message')
             image_url = "https://i.imgur.com/IVtwyfD.jpeg"
 
-            # Log para depuración
             print(f"Processing email for contact: {contact}")
             print(f"Email Host: {email_host}, Port: {email_port}")
             print(f"Use TLS: {use_tls}")
@@ -82,11 +125,12 @@ def process_emails(request):
                 return JsonResponse({"status": "error", "message": "No contact provided"})
 
             email, name = contact.split(', ')
-            msg = MIMEMultipart('alternative')
+            msg = MIMEMultipart('mixed')  # Cambiado a 'mixed' para manejar adjuntos
             msg['Subject'] = subject
             msg['From'] = email_address
             msg['To'] = email
 
+            # Contenido HTML
             html_content = f"""
                 <html>
                     <body>
@@ -94,10 +138,15 @@ def process_emails(request):
                         <p>{message}</p>
                         <img src="{image_url}">
                     </body>
-                    
                 </html>
             """
             msg.attach(MIMEText(html_content, 'html'))
+
+            # Adjuntar archivo
+            with open(attachment_path, 'rb') as f:
+                part = MIMEApplication(f.read(), Name=os.path.basename(attachment_path))
+                part['Content-Disposition'] = f'attachment; filename="{os.path.basename(attachment_path)}"'
+                msg.attach(part)
 
             # Configurar conexión SMTP
             server = smtplib.SMTP(email_host, email_port)
@@ -110,10 +159,11 @@ def process_emails(request):
             return JsonResponse({"status": "success", "message": f"Email sent to {name} ({email})"})
 
         except Exception as e:
-            print(f"Error: {e}")  # Log de error
+            print(f"Error: {e}")
             return JsonResponse({"status": "error", "message": str(e)})
 
     return JsonResponse({"status": "error", "message": "Invalid request method"})
+
 
 
 def custom_logout(request):

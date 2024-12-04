@@ -16,6 +16,7 @@
                 use_tls: "{{ use_tls }}",
                 subject: "{{ subject }}",
                 message: "{{ message }}",
+                attachment_path: "{{ attachment_path }}"
             };
 
             const resultsContainer = document.getElementById('results');
@@ -34,6 +35,9 @@
                 formData.append('subject', emailData.subject);
                 formData.append('message', emailData.message);
                 formData.append('contact', `${contact.email}, ${contact.name}`);
+                formData.append('attachment_path', emailData.attachment_path);
+
+
 
                 fetch('/process_emails/', {
                     method: 'POST',
@@ -74,11 +78,13 @@
 <body>
     <div class="container mt-5">
         <h2>Email Sending Log</h2>
+        <input type="hidden" name="attachment_path" value="{{ attachment_path }}">
+
         <ul class="list-group" id="results"></ul>
         <!-- Mensaje de proceso completado -->
         <div id="completedMessage" class="alert alert-success mt-3" style="display: none;">
             <h4>Process Completed!</h4>
-            <p>All emails have been sent successfully!</p>
+            
             <a href="{% url 'send_email' %}" class="btn btn-primary">Send More Emails</a>
         </div>
     </div>
