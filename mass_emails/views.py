@@ -4,7 +4,6 @@ from .forms import EmailForm
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-import imghdr
 import smtplib
 from django.contrib.auth import logout
 from django.shortcuts import redirect
